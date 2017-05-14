@@ -23,14 +23,17 @@ object Eval {
     // case Proc(opr, opd) => 
     case LambExpr(args, body) => Func(args, body)
     // case CondExpr(test, con, alt) => 
-    case Assign(va, expr) => env.set(va, expr)
+    case Assign(va, expr) => {
+      val v = evalExpr(env, expr)
+      env.set(va, v)
+    }
     // case Derive
     case _ => Nil()
   }
 
   private def evalDef(env: Env, dfn: Def): Data = dfn match {
     case VarDef(va, expr) =>
-      val v = evalExpr(expr)
+      val v = evalExpr(env, expr)
       env.put(va, v)
     case FuncDef(va, args, body) =>
       val f = Func(args, body)

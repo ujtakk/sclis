@@ -1,6 +1,7 @@
 package scalalisp
 
 class Env(initEnv: Map[Var, Data] = Map[Var, Data]()) {
+  import scala.collection.mutable.Map
   import scalalisp.Print
 
   val builtins: Map[Var, Data] = Map[Var, Data](
@@ -12,7 +13,7 @@ class Env(initEnv: Map[Var, Data] = Map[Var, Data]()) {
   var globalEnv: Map[Var, Data] = builtins ++ initEnv
 
   def put(id: Var, data: Data): Data = {
-    globalEnv.update(id -> data)
+    globalEnv.update(id, data)
     Sym(id.id)
   }
 
@@ -26,7 +27,7 @@ class Env(initEnv: Map[Var, Data] = Map[Var, Data]()) {
   }
 
   def set(id: Var, data: Data): Data = {
-    val prev = globalEnv.put(id -> data)
+    val prev = globalEnv.put(id, data)
     prev match {
       case Some(v) => v
       case None =>
