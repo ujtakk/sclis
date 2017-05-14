@@ -1,14 +1,16 @@
 package scalalisp
 
 object Main {
+  import scalalisp.Env
   import scalalisp.Eval
   import scalalisp.Print
 
   def main(args: Array[String]) = {
-    val x1 = IntLit(12)
-    val x2 = IntLit(23)
-    val v = Eval(BinOp(Add(), x1, x2))
-    Print(v)
-    Print(Eval(BinOp(Or(), BoolLit(false), BoolLit(true))))
+    val myEnv = new Env()
+
+    myEnv.set(Var("a"), Bool(false))
+    println(myEnv.get(Var("a")))
+    myEnv.reset()
+    println(myEnv.get(Var("nil")))
   }
 }

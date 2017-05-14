@@ -1,30 +1,62 @@
 package scalalisp
 
 object Eval {
-  def apply(exp: Expr): Val = eval(exp)
+  def apply(prog: Prog): Data = evalProg(prog)
 
-  private def panic(msg: String): UnitV = {
-    println(msg)
-    UnitV()
+  private def evalProg(prog: Prog): Data = {
+    // TODO
+    var a: Data = Nil()
+    for (stmt <- prog.stmts) a = evalStmt(stmt)
+    a
   }
 
-  private def apply(op: Op, x1: Val, x2: Val): Val = (op, x1, x2) match {
-    case (Add(), IntV(v1), IntV(v2)) => IntV(v1 + v2)
-    case (Add(), _, _) => panic("Both arguments must be integer: +")
-    case (Sub(), IntV(v1), IntV(v2)) => IntV(v1 - v2)
-    case (Sub(), _, _) => panic("Both arguments must be integer: +")
-    case (Or(), BoolV(v1), BoolV(v2)) => BoolV(v1 || v2)
-    case (Or(), _, _) => panic("Both arguments must be boolean: ||")
-    case (And(), BoolV(v1), BoolV(v2)) => BoolV(v1 && v2)
-    case (And(), _, _) => panic("Both arguments must be boolean: &&")
+  private def evalStmt(stmt: Stmt): Data = stmt match {
+    // case VarDef
+    // case FuncDef
+    // case BeginDef
+    case _ => Nil()
   }
 
-  private def eval(exp: Expr): Val = exp match {
-    case BoolLit(b) => BoolV(b)
-    case IntLit(i) => IntV(i)
-    case BinOp(op, x1, x2) =>
-      val v1 = eval(x1)
-      val v2 = eval(x2)
-      apply(op, v1, v2)
+  private def evalExpr(expr: Expr): Data = expr match {
+    // case VarExpr
+    case Literal(lit) => evalLit(lit)
+    // case Proc
+    // case CondExpr
+    // case Assign
+    // case Derive
+    case _ => Nil()
+  }
+
+  private def evalDef(dfn: Def): Data = dfn match {
+    // case VarDef
+    // case FuncDef
+    // case BeginDef
+    case _ => Nil()
+  }
+
+  private def evalDrv(drv: Drv): Data = drv match {
+    // case CondDrv
+    // case ConsEls
+    // case CaseDrv
+    // case CaseEls
+    // case AndDrv
+    // case OrDrv
+    // case LetDrv
+    // case LetSDrv
+    // case LetRDrv
+    // case BgnDrv
+    // case DoDrv
+    // case DlyDrv
+    // case QQDrv
+    case _ => Nil()
+  }
+
+  private def evalLit(lit: Lit): Data = lit match {
+    // case QuotLit(data)
+    case BoolLit(b) => b
+    case NumLit(n) => n
+    case CharLit(c) => c
+    case StrLit(s) => s
+    case _ => Nil()
   }
 }

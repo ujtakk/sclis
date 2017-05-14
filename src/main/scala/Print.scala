@@ -1,11 +1,19 @@
 package scalalisp
 
 object Print {
-  def apply(v: Val) = print(v)
+  def apply(v: Data) = print(v)
 
-  private def print(v: Val) = v match {
-    case UnitV() => println(())
-    case BoolV(b) => println(b)
-    case IntV(n) => println(n)
+  private def print(v: Data) = v match {
+    case Nil() => println("()")
+    case Bool(b) => println(if (b) "#t" else "#f")
+    case Num(i) => println(i)
+    case Chr(c) => println("#\\"+c)
+    case Str(s) => println('"'+s+'"')
+    case Sym(s) => println(s)
+    case Lst(l) => println(l)
+    case DotLst(car, cdr) => println(car, cdr)
+    case AbbrLst(d) => println(d)
+    case Vector(v) => println(v)
+    case Func(form, body) => println(form, body)
   }
 }
