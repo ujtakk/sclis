@@ -18,7 +18,7 @@ case class DotLst(car: List[Data], cdr: Data) extends Data
 case class AbbrLst(d: Data) extends Data
 case class Vector(v: Array[Data]) extends Data
 // adding Func to Data trait is extension from R5RS
-case class Func(form: List[Var], body: Block) extends Data
+case class Func(args: List[Var], body: Block) extends Data
 
 /*********************************************************************
  * Syntax Definition
@@ -41,11 +41,11 @@ case class Delay() extends Key
 case class QuasiQuote() extends Key
 
 sealed trait Lit extends ScmSyntax
-case class QuotLit(data: Data) extends Lit
-case class BoolLit(b: Bool) extends Lit
-case class NumLit(n: Num) extends Lit
-case class CharLit(c: Chr) extends Lit
-case class StrLit(s: Str) extends Lit
+case class QuoteLit(d: String) extends Lit
+case class BoolLit(b: Boolean) extends Lit
+case class NumLit(n: Int) extends Lit
+case class CharLit(c: Char) extends Lit
+case class StrLit(s: String) extends Lit
 
 case class Block(defs: List[Def], body: List[Expr]) extends ScmSyntax
 case class Bound(va: Var, expr: Expr) extends ScmSyntax
@@ -70,7 +70,7 @@ sealed trait Expr extends ScmSyntax
 case class Var(id: String) extends Expr
 case class Literal(lit: Lit) extends Expr
 case class Proc(opr: Expr, opd: List[Expr]) extends Expr
-case class LambExpr(form: List[Var], body: Block) extends Expr
+case class LambExpr(args: List[Var], body: Block) extends Expr
 case class CondExpr(test: Expr, con: Expr, alt: Option[Expr]) extends Expr
 case class Assign(va: Var, expr: Expr) extends Expr
 case class Derive(drv: Drv) extends Expr

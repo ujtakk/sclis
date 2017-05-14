@@ -3,7 +3,7 @@ package scalalisp
 object Print {
   def apply(v: Data) = print(v)
 
-  private def print(v: Data) = v match {
+  def print(v: Data) = v match {
     case Nil() => println("()")
     case Bool(b) => println(if (b) "#t" else "#f")
     case Num(i) => println(i)
@@ -15,5 +15,10 @@ object Print {
     case AbbrLst(d) => println(d)
     case Vector(v) => println(v)
     case Func(form, body) => println(form, body)
+  }
+
+  def panic(v: String): Data = {
+    println(v)
+    Nil()
   }
 }

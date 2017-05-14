@@ -8,7 +8,7 @@ object Main {
   def main(args: Array[String]) = {
     val myEnv = new Env()
 
-    myEnv.set(Var("a"), Bool(false))
+    myEnv.put(Var("a"), Bool(false))
     println(myEnv.get(Var("a")))
     myEnv.reset()
     println(myEnv.get(Var("nil")))
