@@ -18,10 +18,10 @@ object Eval {
   }
 
   private def evalExpr(env: Env, expr: Expr): Data = expr match {
-    case Var(id) => env.get(Var(id))
+    case VarExpr(id) => env.get(Var(id))
     case Literal(lit) => evalLit(env, lit)
     // case Proc(opr, opd) => 
-    case LambExpr(args, body) => Func(args, body)
+    // case LambExpr(args, body) => Func(args, body)
     // case CondExpr(test, con, alt) => 
     case Assign(va, expr) => {
       val v = evalExpr(env, expr)
@@ -35,9 +35,9 @@ object Eval {
     case VarDef(va, expr) =>
       val v = evalExpr(env, expr)
       env.put(va, v)
-    case FuncDef(va, args, body) =>
-      val f = Func(args, body)
-      env.put(va, f)
+    // case FuncDef(va, args, body) =>
+    //   val f = Func(args, body)
+    //   env.put(va, f)
     // case BeginDef
     case _ => Nil()
   }

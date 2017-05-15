@@ -9,8 +9,10 @@ object Main {
     val myEnv = new Env()
 
     myEnv.put(Var("a"), Bool(false))
-    println(myEnv.get(Var("a")))
+    Print(myEnv.get(Var("a")))
+    Print(Chr('c'))
+    Print(Clos(myEnv, List(Var("car"), Var("cdr")), (x: List[Var]) => Nil()))
     myEnv.reset()
-    println(myEnv.get(Var("nil")))
+    Print(myEnv.get(Var("nil")))
   }
 }

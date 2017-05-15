@@ -1,9 +1,9 @@
 package scalalisp
 
 object Print {
-  def apply(v: Data) = print(v)
+  def apply(v: Data) = _print(v)
 
-  def print(v: Data) = v match {
+  private def _print(v: Data) = v match {
     case Nil() => println("()")
     case Bool(b) => println(if (b) "#t" else "#f")
     case Num(i) => println(i)
@@ -13,8 +13,11 @@ object Print {
     case Lst(l) => println(l)
     case DotLst(car, cdr) => println(car, cdr)
     case AbbrLst(d) => println(d)
-    case Vector(v) => println(v)
-    case Func(form, body) => println(form, body)
+    case Vec(v) => println(v)
+    case Clos(env, args, body) =>
+      print("(lambda (")
+      print(args.map(x => x.id).mkString(" "))
+      println(") ...)")
   }
 
   def panic(v: String): Data = {
