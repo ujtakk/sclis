@@ -18,6 +18,7 @@ case class DotLst(car: List[Data], cdr: Data) extends Data
 case class AbbrLst(d: Data) extends Data
 case class Vec(v: Array[Data]) extends Data
 // adding Func to Data trait is extension from R5RS
+case class Func(f: List[Data] => Data) extends Data
 case class Clos(env: Env, args: List[Var], body: List[Var] => Data) extends Data
 
 /*********************************************************************

@@ -1,24 +1,27 @@
 package scalalisp
 
 object Print {
-  def apply(v: Data) = _print(v)
+  def apply(v: Data) = println(show(v))
 
-  private def _print(v: Data) = v match {
-    case Nil() => println("()")
-    case Bool(b) => println(if (b) "#t" else "#f")
-    case Num(i) => println(i)
-    case Chr(c) => println("#\\"+c)
-    case Str(s) => println('"'+s+'"')
-    case Sym(s) => println(s)
-    case Lst(l) => println(l)
-    case DotLst(car, cdr) => println(car, cdr)
-    case AbbrLst(d) => println(d)
-    case Vec(v) => println(v)
+  private def show(v: Data): String = v match {
+    case Nil() => "()"
+    case Bool(b) => if (b) "#t" else "#f"
+    case Num(i) => i.toString()
+    case Chr(c) => "#\\"+c
+    case Str(s) => '"'+s+'"'
+    case Sym(s) => s
+    case Lst(l) => "("+unwords(l)+")"
+    case DotLst(car, cdr) => "("+unwords(car)+" . "+show(cdr)+")"
+    case AbbrLst(d) => "'"+show(d)
+    case Vec(v) => "#("+unwords(v)+")"
     case Clos(env, args, body) =>
-      print("(lambda (")
-      print(args.map(x => x.id).mkString(" "))
-      println(") ...)")
+      "(lambda ("+args.map(x => x.id).mkString(" ")+") ...)"
   }
+
+  private def unwords(l: List[Data]): String =
+    l.map(x => show(x)).mkString(" ")
+  private def unwords(l: Array[Data]): String =
+    l.map(x => show(x)).mkString(" ")
 
   def panic(v: String): Data = {
     println(v)

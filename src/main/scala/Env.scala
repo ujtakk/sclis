@@ -8,6 +8,26 @@ class Env(initEnv: Map[Var, Data] = Map[Var, Data]()) {
     Var("nil") -> Nil(),
     Var("#t") -> Bool(true),
     Var("#f") -> Bool(false)
+    Var("+") -> Func(x => x match {
+      case List(Num(a), Num(b)) => Num(a + b)
+      case _ => Nil()
+    })
+    Var("-") -> Func(x => x match {
+      case List(Num(a), Num(b)) => Num(a - b)
+      case _ => Nil()
+    })
+    Var("*") -> Func(x => x match {
+      case List(Num(a), Num(b)) => Num(a * b)
+      case _ => Nil()
+    })
+    Var("zero?") -> Func(x => x match {
+      case Num(a) => Bool(a == 0)
+      case _ => Bool(false)
+    })
+    Var("positive?") -> Func(x => x match {
+      case Num(a) => Bool(a > 0)
+      case _ => Bool(false)
+    })
   )
 
   var globalEnv: Map[Var, Data] = builtins ++ initEnv

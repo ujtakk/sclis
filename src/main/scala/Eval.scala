@@ -10,6 +10,18 @@ object Eval {
     retval
   }
 
+  private def evalVar(env: Env, va: Var): Data = env.get(va)
+
+  private def evalBlock(env: Env, block: Block): Data = block match {
+    case Block(defs, body) =>
+      defs.map(d => evalDef(env, d))
+      body.map(e => evalExpr(env, e)).last
+    case _ => Nil()
+  }
+
+  private def evalBound(env: Env, bound: Bound): Data = {
+  }
+
   private def evalStmt(env: Env, stmt: Stmt): Data = stmt match {
     case ComUnit(com) => evalExpr(env, com)
     case DefUnit(dfn) => evalDef(env, dfn)
@@ -18,23 +30,24 @@ object Eval {
   }
 
   private def evalExpr(env: Env, expr: Expr): Data = expr match {
-    case VarExpr(id) => env.get(Var(id))
+    case VarExpr(id) => evalVar(Var(id))
     case Literal(lit) => evalLit(env, lit)
-    // case Proc(opr, opd) => 
-    // case LambExpr(args, body) => Func(args, body)
-    // case CondExpr(test, con, alt) => 
-    case Assign(va, expr) => {
-      val v = evalExpr(env, expr)
-      env.set(va, v)
+    case ProcCall(opr, opd) => evalExpr(env, opr)(opd)
+    case LambExpr(args, body) => Clos(env, args, evalBlock(body))
+    case CondExpr(test, con, alt) => evalExpr(test) match {
+      case Bool(true) => eval(con)
+      case Bool(false) => alt match {
+        case Some(e) => evalExpr(e)
+        case None => Nil()
+      }
     }
+    case Assign(va, expr) => env.set(va, evalExpr(env, expr))
     // case Derive
     case _ => Nil()
   }
 
   private def evalDef(env: Env, dfn: Def): Data = dfn match {
-    case VarDef(va, expr) =>
-      val v = evalExpr(env, expr)
-      env.put(va, v)
+    case VarDef(va, expr) => env.put(va, evalExpr(env, expr))
     // case FuncDef(va, args, body) =>
     //   val f = Func(args, body)
     //   env.put(va, f)
