@@ -20,6 +20,8 @@ object Eval {
   }
 
   private def evalBound(env: Env, bound: Bound): Data = {
+    // TODO
+    Nil()
   }
 
   private def evalStmt(env: Env, stmt: Stmt): Data = stmt match {
@@ -30,14 +32,20 @@ object Eval {
   }
 
   private def evalExpr(env: Env, expr: Expr): Data = expr match {
-    case VarExpr(id) => evalVar(Var(id))
+    case VarExpr(va) => evalVar(env, va)
     case Literal(lit) => evalLit(env, lit)
-    case ProcCall(opr, opd) => evalExpr(env, opr)(opd)
-    case LambExpr(args, body) => Clos(env, args, evalBlock(body))
-    case CondExpr(test, con, alt) => evalExpr(test) match {
-      case Bool(true) => eval(con)
+    case ProcCall(opr, opd) => evalExpr(env, opr) match {
+      case Func(f) => f(opd.map(e => evalExpr(env, e)))
+      case _ => Nil()
+    }
+    case LambExpr(args, body) =>
+      val argFunc = args.map(x => evalVar(env, x))
+      val bodyFunc = evalBlock(env, body)
+      Clos(env, args, argFunc => bodyFunc)
+    case CondExpr(test, con, alt) => evalExpr(env, test) match {
+      case Bool(true) => evalExpr(env, con)
       case Bool(false) => alt match {
-        case Some(e) => evalExpr(e)
+        case Some(e) => evalExpr(env, e)
         case None => Nil()
       }
     }
@@ -48,9 +56,11 @@ object Eval {
 
   private def evalDef(env: Env, dfn: Def): Data = dfn match {
     case VarDef(va, expr) => env.put(va, evalExpr(env, expr))
-    // case FuncDef(va, args, body) =>
-    //   val f = Func(args, body)
-    //   env.put(va, f)
+    case FuncDef(va, args, body) =>
+      val argFunc = args.map(x => evalVar(env, x))
+      val bodyFunc = evalBlock(env, body)
+      val f = Func(argFunc => bodyFunc)
+      env.put(va, f)
     // case BeginDef
     case _ => Nil()
   }

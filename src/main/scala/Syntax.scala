@@ -19,7 +19,7 @@ case class AbbrLst(d: Data) extends Data
 case class Vec(v: Array[Data]) extends Data
 // adding Func to Data trait is extension from R5RS
 case class Func(f: List[Data] => Data) extends Data
-case class Clos(env: Env, args: List[Var], body: List[Var] => Data) extends Data
+case class Clos(env: Env, args: List[Var], body: List[Data] => Data) extends Data
 
 /*********************************************************************
  * Syntax Definition
@@ -42,7 +42,7 @@ case class FuncDef(va: Var, args: List[Var], body: Block) extends Def
 case class BeginDef(defs: List[Def]) extends Def
 
 sealed trait Expr extends ScmSyntax
-case class VarExpr(id: String) extends Expr
+case class VarExpr(va: Var) extends Expr
 case class Literal(lit: Lit) extends Expr
 case class ProcCall(opr: Expr, opd: List[Expr]) extends Expr
 case class LambExpr(args: List[Var], body: Block) extends Expr
