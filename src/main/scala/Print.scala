@@ -3,7 +3,7 @@ package scalalisp
 object Print {
   def apply(v: Data) = println(show(v))
 
-  private def show(v: Data): String = v match {
+  def show(v: Data): String = v match {
     case Nil() => "()"
     case Bool(b) => if (b) "#t" else "#f"
     case Num(i) => i.toString()

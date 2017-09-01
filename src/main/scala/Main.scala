@@ -18,5 +18,6 @@ object Main {
       Prog(List(ComUnit(
         ProcCall(VarExpr(Var("+")),
                  List(Literal(NumLit(12)), Literal(NumLit(43)))))))))
+    // Print(Read())
   }
 }
